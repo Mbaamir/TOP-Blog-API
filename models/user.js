@@ -16,8 +16,8 @@ let userSchema = new Schema({
     type: String,
     type: String,
     required: true,
-    minLength: 8,
-    maxLength: 50,
+    minLength: 60,
+    maxLength: 60,
     trim: true,
   },
 });
