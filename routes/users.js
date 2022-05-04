@@ -4,10 +4,6 @@ const passport = require("passport");
 const issueJwt = require("../auth/issueJWT");
 const userController = require("../controllers/userController");
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("Users");
-});
 
 router.get(
   "/protected",

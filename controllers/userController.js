@@ -6,7 +6,7 @@ exports.registerUser = function (req, res, next) {
     password: req.body.password,
   }).save((err) => {
     if (err) {
-      console.log(err, "error saving");
+      console.log(err, "error saving CreatedUser");
       res.sendStatus(400);
     } else {
       console.log("Created User");

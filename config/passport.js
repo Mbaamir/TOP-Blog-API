@@ -13,7 +13,7 @@ const jwtStrategy = new PassportJwtStrategy(options, (payload, done) => {
     .findOne({ username: payload.sub })
     .then((user) => {
       if (user) {
-        console.log(user, "user Found");
+        console.log(user, "Authenticated User");
         done(null, user);
       } else {
         done(null, false);
@@ -24,5 +24,5 @@ const jwtStrategy = new PassportJwtStrategy(options, (payload, done) => {
 
 // TODO
 module.exports = (passport) => {
-  passport.use(jwtStrategy)
+  passport.use(jwtStrategy);
 };
