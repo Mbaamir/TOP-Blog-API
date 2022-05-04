@@ -1,6 +1,6 @@
 const userModel = require("../models/user");
 
-const JwtStrategy = require("passport-jwt").Strategy;
+const PassportJwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
 const options = {
@@ -8,10 +8,10 @@ const options = {
   secretOrKey: process.env.jwtSecret,
 };
 
-const strategy = new JwtStrategy(options, (payload, done) => {
+const jwtStrategy = new PassportJwtStrategy(options, (payload, done) => {
   userModel
     .findOne({ username: payload.sub })
-    .then((user) => {r
+    .then((user) => {
       if (user) {
         console.log(user, "user Found");
         done(null, user);
@@ -24,5 +24,5 @@ const strategy = new JwtStrategy(options, (payload, done) => {
 
 // TODO
 module.exports = (passport) => {
-  passport.use(strategy)
+  passport.use(jwtStrategy)
 };

@@ -19,15 +19,13 @@ let userSchema = new Schema({
   },
 });
 
-userSchema.pre("save", async function (next) {
-  const user = this;
+userSchema.pre("save", function () {
   const hash = bcrypt.hashSync(this.password, 10);
   this.password = hash;
 });
 
 userSchema.methods.isValidPassword = async function (password) {
-  const user = this;
-  const doesPasswordMatch = await bcrypt.compare(password, user.password);
+  const doesPasswordMatch = bcrypt.compareSync(password, this.password);
   return doesPasswordMatch;
 };
 

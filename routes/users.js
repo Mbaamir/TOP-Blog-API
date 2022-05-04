@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const jwt = require("jsonwebtoken");
-const secretOrKey = process.env.JwtSecret;
+const issueJwt = require("../auth/issueJWT");
 const userController = require("../controllers/userController");
 
 /* GET users listing. */
@@ -18,19 +17,6 @@ router.get(
   }
 );
 
-// router.post(
-//   "/register",
-//   passport.authenticate("register", { session: false }, (err) => {
-//     if (err) res.sendStatus(400);
-//   }),
-//   async (req, res, next) => {
-//     res.status(201).json({
-//       message: "Signup successful",
-//       username: req.user,
-//     });
-//   }
-// );
-
 router.post("/register", userController.registerUser);
 
 router.post("/login", async (req, res, next) => {
@@ -38,21 +24,14 @@ router.post("/login", async (req, res, next) => {
     "login",
     { session: false },
     async (err, user, info) => {
+      if (!user) {
+        console.log(info, "info");
+        return res.sendStatus(400);
+      }
       try {
-        if (err || !user) {
-          console.log(err, "err");
-          const error = new Error("An error occurred.");
-          return next(error);
-        }
-
-        req.logIn(user, { session: false }, async (error) => {
-          if (error) return next(error);
-
-          const body = { _userId: user._userId, username: user.username };
-          const token = jwt.sign({ user: body }, secretOrKey);
-
-          return res.status(200).json({ token });
-        });
+        console.log(info, "info");
+        const token = issueJwt(user);
+        return res.status(200).json({ token });
       } catch (error) {
         return next(error);
       }
