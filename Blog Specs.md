@@ -14,6 +14,7 @@
 -Post
 --User
 --Time/Date
+--Body
 
 -Comment
 --Post

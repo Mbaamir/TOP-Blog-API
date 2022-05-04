@@ -1,8 +1,5 @@
-const fs = require("fs");
+const userModel = require("../models/user");
 
-const user = require("mongoose").model("user");
-
-const passport = require('passport');
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
@@ -12,9 +9,9 @@ const options = {
 };
 
 const strategy = new JwtStrategy(options, (payload, done) => {
-  user
+  userModel
     .findOne({ username: payload.sub })
-    .then((user) => {
+    .then((user) => {r
       if (user) {
         console.log(user, "user Found");
         done(null, user);
