@@ -8,7 +8,7 @@ exports.doesUserAndPostExist = async function (
   commentedPost,
   parentComment = false
 ) {
-  let parentCommentPromise = false;
+  let parentCommentPromise = null;
   let commentedPostPromise = null;
 
   let commentingUserPromise = userModel
@@ -20,10 +20,11 @@ exports.doesUserAndPostExist = async function (
   }
 
   if (parentComment) {
-    parentCommentPromise = null;
     if (parentComment.match(/^[0-9a-fA-F]{24}$/)) {
       parentCommentPromise = commentModel.findById(parentComment).exec();
     }
+  } else {
+    parentCommentPromise = false;
   }
 
   const val = await Promise.all([
