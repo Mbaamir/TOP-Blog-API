@@ -13,7 +13,7 @@ const jwtStrategy = new PassportJwtStrategy(options, (payload, done) => {
     .findOne({ username: payload.sub })
     .then((user) => {
       if (user) {
-        console.log(user, "Authenticated User");
+        console.log(user.username, "Authenticated User");
         done(null, user);
       } else {
         done(null, false);

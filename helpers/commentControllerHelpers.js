@@ -6,9 +6,9 @@ const userModel = require("../models/user");
 exports.doesUserAndPostExist = async function (
   commentingUser,
   commentedPost,
-  parentComment = null
+  parentComment = false
 ) {
-  let parentCommentPromise = null;
+  let parentCommentPromise = false;
   let commentedPostPromise = null;
 
   let commentingUserPromise = userModel
@@ -20,6 +20,7 @@ exports.doesUserAndPostExist = async function (
   }
 
   if (parentComment) {
+    parentCommentPromise = null;
     if (parentComment.match(/^[0-9a-fA-F]{24}$/)) {
       parentCommentPromise = commentModel.findById(parentComment).exec();
     }
@@ -31,5 +32,11 @@ exports.doesUserAndPostExist = async function (
     parentCommentPromise,
   ]);
 
-  return val;
+  let commentObject = {
+    commentingUser: val[0],
+    commentedPost: val[1],
+    parentComment: val[2],
+  };
+
+  return commentObject;
 };
