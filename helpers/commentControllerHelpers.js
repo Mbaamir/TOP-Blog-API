@@ -8,7 +8,6 @@ exports.doesUserAndPostExist = async function (
   commentedPost,
   parentComment = false
 ) {
-  let parentCommentPromise = null;
   let commentedPostPromise = null;
 
   let commentingUserPromise = userModel
@@ -19,25 +18,28 @@ exports.doesUserAndPostExist = async function (
     commentedPostPromise = postModel.findById(commentedPost).exec();
   }
 
-  if (parentComment) {
-    if (parentComment.match(/^[0-9a-fA-F]{24}$/)) {
-      parentCommentPromise = commentModel.findById(parentComment).exec();
-    }
-  } else {
-    parentCommentPromise = false;
-  }
-
-  const val = await Promise.all([
-    commentingUserPromise,
-    commentedPostPromise,
-    parentCommentPromise,
-  ]);
+  const val = await Promise.all([commentingUserPromise, commentedPostPromise]);
 
   let commentObject = {
     commentingUser: val[0],
     commentedPost: val[1],
-    parentComment: val[2],
   };
 
-  return commentObject;
+  if (parentComment) {
+    if (parentComment.match(/^[0-9a-fA-F]{24}$/)) {
+      let parentCommentDocument = null;
+
+      let found = await commentModel.findById(parentComment);
+      if (found) {
+        parentCommentDocument = found;
+        commentObject = {
+          ...commentObject,
+          parentComment: parentCommentDocument,
+        };
+        return commentObject;
+      }
+    }
+  } else {
+    return commentObject;
+  }
 };
